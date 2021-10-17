@@ -1,0 +1,34 @@
+{:nrepl {:port 8777}
+
+ :deps true
+
+ :dev-http
+ {8280 "public"}
+
+ :builds
+   {:app {:target :graaljs
+          :output-to "public/assets/graal.js"
+          :entries [app.component]
+          :jvm-opts ["-Xmx4G"]
+          :modules
+          {:app {:init-fn [app.component/countinghtml]
+                 :prepend-js "./graal-bootstrap.js"}}
+          :build-hooks [(util.clean-static/static-hook)]}
+     :browser {:target     :browser
+               :output-dir "public/assets/js"
+               :asset-path "/js"
+
+               :jvm-opts ["-Xmx6G"]
+               :module-loader true
+
+               :modules
+               {:shared {}
+                :counting {:entries [app.component
+                                     app.events
+                                     app.subs
+                                     app.render-server]
+                           :depends-on #{:shared}}}}
+
+     :pre-render {:target :node-script
+                  :main app.render-server/main-to-html
+                  :output-to "public/prerenderscript.js"}}}

@@ -1,0 +1,5 @@
+node_modules/
+.cpcache/
+.lsp/
+.shadow-cljs/
+public/assets/
